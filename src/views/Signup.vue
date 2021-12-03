@@ -10,7 +10,7 @@
         rules="required|max:10"
       >
         <v-text-field
-          v-model="name"
+          v-model="user.name"
           :counter="10"
           :error-messages="errors"
           label="Name"
@@ -27,7 +27,7 @@
         }"
       >
         <v-text-field
-          v-model="phoneNumber"
+          v-model="user.phoneNumber"
           :counter="7"
           :error-messages="errors"
           label="Phone Number"
@@ -40,13 +40,13 @@
         rules="required|email"
       >
         <v-text-field
-          v-model="email"
+          v-model="user.email"
           :error-messages="errors"
           label="E-mail"
           required
         ></v-text-field>
       </validation-provider>
-      <validation-provider
+      <!-- <validation-provider
         v-slot="{ errors }"
         name="select"
         rules="required"
@@ -59,8 +59,8 @@
           data-vv-name="select"
           required
         ></v-select>
-      </validation-provider>
-      <validation-provider
+      </validation-provider> -->
+      <!-- <validation-provider
         v-slot="{ errors }"
         rules="required"
         name="checkbox"
@@ -73,7 +73,7 @@
           type="checkbox"
           required
         ></v-checkbox>
-      </validation-provider>
+      </validation-provider> -->
 
       <v-btn
         class="mr-4"
@@ -82,6 +82,13 @@
       >
         submit
       </v-btn>
+        <v-btn
+        class="mr-4"
+        type="submit"
+        @click="show"
+      >
+     check data
+      </v-btn>
       <v-btn @click="clear">
         clear
       </v-btn>
@@ -89,6 +96,7 @@
   </validation-observer>
 </template>
 <script>
+import axios from 'axios'
   import { required, digits, email, max, regex } from 'vee-validate/dist/rules'
   import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
 
@@ -125,22 +133,48 @@
       ValidationObserver,
     },
     data: () => ({
-      name: '',
-      phoneNumber: '',
-      email: '',
-      select: null,
+     
       items: [
         'Item 1',
         'Item 2',
         'Item 3',
-        'Item 4',
       ],
+      user: {
+        name: "",
+        phoneNumber: '',
+      email: '',
+      },
       checkbox: null,
     }),
 
     methods: {
+      show(){
+        
+    
+  
+  
+          
+        
+        // console.log(this.user.name)
+      },
       submit () {
+        alert("submit")
         this.$refs.observer.validate()
+         let    formData = JSON.stringify(this.user);
+      let  SignupApi = "http://127.0.0.1:8000/api/signup";
+// axios.post("" , formData , {
+//     headers: "ahmad"
+//   });
+
+
+        axios.post(SignupApi , formData)
+      .then(function (response) {
+        alert (response.data);
+      })
+      .catch(function (error) {
+        alert(error);
+      });
+
       },
       clear () {
         this.name = ''
